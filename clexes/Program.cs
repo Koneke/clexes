@@ -80,20 +80,18 @@ namespace clexes
 			if (switches.Contains("-f"))
 			{
 				var longest = files.Max(f => f.FullPath.Length);
-				Console.WriteLine("longest f {0}", longest);
 				formatters.Add("{2," + longest + "}");
 			}
 
 			if (switches.Contains("-n"))
 			{
 				var longest = files.Max(f => f.Name.Length);
-				Console.WriteLine("longest n {0}", longest);
 				formatters.Add("{1," + longest + "}");
 			}
 
 			if (switches.Contains("-l"))
 			{
-				formatters.Add("({3})");
+				formatters.Add("({3,5})");
 			}
 
 			var formatString = string.Join(" ", formatters);
@@ -107,18 +105,24 @@ namespace clexes
 
 			foreach(var f in files)
 			{
-				using (var stream = new CountingReader(new FileStream(f.FullPath, FileMode.Open, FileAccess.Read)))
+				try
 				{
-					string line;
-					while ((line = stream.ReadLine()) != null)
+					using (var stream = new CountingReader(new FileStream(f.FullPath, FileMode.Open, FileAccess.Read)))
 					{
-						Console.WriteLine(
-							formatString,
-							line,
-							f.Name,
-							f.FullPath,
-							stream.LineNumber);
+						string line;
+						while ((line = stream.ReadLine()) != null)
+						{
+							Console.WriteLine(
+								formatString,
+								line,
+								f.Name,
+								f.FullPath,
+								stream.LineNumber);
+						}
 					}
+				}
+				catch(UnauthorizedAccessException e)
+				{
 				}
 			}
 		}
