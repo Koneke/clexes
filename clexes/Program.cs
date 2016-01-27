@@ -42,12 +42,6 @@ namespace clexes
 			var switches = new List<string>(arguments.Where(a => a[0] == '-'));
 			arguments.RemoveAll(a => switches.Contains(a));
 
-			if (!arguments.Any())
-			{
-				PrintHelp();
-				return;
-			}
-
 			if (Console.IsInputRedirected)
 			{
 				string line;
@@ -55,6 +49,12 @@ namespace clexes
 				{
 					arguments.Add(line);
 				}
+			}
+
+			if (!arguments.Any())
+			{
+				PrintHelp();
+				return;
 			}
 
 			List<F> files = new List<F>();
