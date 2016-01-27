@@ -27,11 +27,26 @@ namespace clexes
 			public string FullPath { get; set; }
 		}
 
+		static void PrintHelp()
+		{
+			Console.WriteLine("Usage cat [-f] [-n] [-l] file1 file2 .. fileN");
+			Console.WriteLine("(or as piped input)");
+			Console.WriteLine("-f : show full path of the file before each line.");
+			Console.WriteLine("-n : show file name before each line.");
+			Console.WriteLine("-l : show line number before each line.");
+		}
+
 		static void Main(string[] args)
 		{
 			var arguments = new List<string>(args);
 			var switches = new List<string>(arguments.Where(a => a[0] == '-'));
 			arguments.RemoveAll(a => switches.Contains(a));
+
+			if (!arguments.Any())
+			{
+				PrintHelp();
+				return;
+			}
 
 			if (Console.IsInputRedirected)
 			{
